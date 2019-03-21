@@ -23,9 +23,9 @@ You start work on a big feature, making a few commits that don't entirely finish
 fbee832 Started new-feature (aviflombaum, 2 days ago)
 ```
 
-Two days ago we started working on our new-feature. Yesterday we were almost done. Today we made progress, but it's still broken. In our current state, if we had to push the repository live and deploy the latest version of our code to production, our users would see a half-finished, currently broken new-feature. That's no good.
+Two days ago we started working, and as of two hours ago, we're almost done. In our current state, if we had to push the repository and deploy the latest version of our code to production, our users would see a half-finished, currently broken new-feature. That's no good.
 
-But no big deal, right? We can just wait until we're done with new-feature to deploy our code and push the repository live to our users. Here's what happens though. We notice a big bug that is currently breaking the application for all users. The bug is an easy fix, one simple change and deploy of your code can make everything work again. Unfortunately, even if you made that commit, you can't currently deploy it because while that commit might fix the bug, you'd still be pushing your half-finished and broken new-feature.
+But no big deal, right? We can just wait until we're done with the feature to deploy our code then. But what if we notice a big bug currently breaking the application for all users? It's an easy fix, and one simple change would make everything work again. Unfortunately, even if you made that commit, you can't currently deploy, because while your edit might fix the bug, you'd still be pushing our half-finished and broken new-feature.
 
 ```
 r4212d1 Fix to application breaking bug (aviflombaum, just now)
@@ -34,11 +34,11 @@ r4212d1 Fix to application breaking bug (aviflombaum, just now)
 fbee832 Started new-feature (aviflombaum, 2 days ago)
 ```
 
-See, we can't push all those commits. Wouldn't it have been great if we simply isolated our work on new-feature into its own copy of our code so that until it's done, we could have deployed the commit that fixes the application? We can do exactly this using a feature in git called branches.
+Wouldn't it have been great if we simply isolated our work on new-feature into its own copy of our code so that until it's done, we can still easily edit and redeploy our main application? We can do exactly this using a feature in git called branches.
 
 ## Making a branch with `git branch`
 
-Let's quickly make a repository that we can use as a sandbox to experiment with the collaborative features of git. You don't have to follow along, you'll be able to understand the concepts from the reading but if you'd like, you can copy and paste these commands locally.
+Let's quickly make a repository that we can use as a sandbox to experiment with the collaborative features of git. We recommend following along by trying out some of the commands in your terminal as you read. The best way to get comfortable with git is to experiment, add, commit, and push until the process is second nature. Feel free to copy and paste the lines below and pay close attention to any error messages you recieve.
 
 From our home directory we're going to make a new directory for our mission-critical-application.
 
@@ -51,8 +51,10 @@ mission-critical-application $ git add application.rb
 mission-critical-application $ git commit -m "First working version of application.rb"
 ```
 
-1. We made a new directory with `mkdir mission-critical-application`.
-2. We moved into that directory with `cd mission-critical-application`.
+Let's break this down piece by piece:
+
+1. First, we made a new directory with `mkdir mission-critical-application`.
+2. We navigated into that directory with `cd mission-critical-application`.
 3. We turned that directory into a git repository with `git init`.
 4. We created our application `touch application.rb`.
 5. We programmed an entire working first version in `application.rb` (*not reflected in the CLI commands above, but we did, and it was awesome, great job*).
@@ -60,7 +62,7 @@ mission-critical-application $ git commit -m "First working version of applicati
 7. We committed the first working version of our application with `git commit -m "First working version of application.rb"`.
 8. You deploy your application to production and people start using it (*also not reflected in the CLI commands above, but we did, and it too was awesome, great job*).
 
-With our application online and customers rolling in, we notice a bug and quickly add a fix in the form of a file, `first-bug-fix.rb` (*this is just an example*).
+Now, let's fast forward a week or two. Our application is online and customers rolling in. But we notice a bug and quickly add a fix in the form of a file, `first-bug-fix.rb`. Back to the command line:
 
 ```
 mission-critical-application $ touch first-bug-fix.rb
@@ -72,9 +74,9 @@ Right now our git log could be visualized as a timeline composed of two commits.
 
 ![First Two Commits](https://dl.dropboxusercontent.com/s/ikorf1qvvp4tay0/2015-11-02%20at%2011.15%20AM.png)
 
-### About `master` branch.
+### About the `master` branch.
 
-Notice that these commits are occurring in a linear sequence of events, almost like a timeline? We call this timeline a branch. Whenever you are working on commits in git, you are adding them on a timeline of code called a branch. The branch you are on by default at the start of any repository, your main timeline, the main branch is called master.
+Notice that these commits are occurring in a linear sequence of events, almost like a timeline. We call this timeline a branch. Whenever you are working on commits in git, you are adding them to branch, and your main default branch at the start of any repository is called the `master`.
 
 ![Master Branch](https://dl.dropboxusercontent.com/s/v75as2cf6xr8n8a/2015-11-02%20at%2011.17%20AM.png)
 
@@ -86,17 +88,19 @@ On branch master
 nothing to commit, working directory clean
 ```
 
-The `master` git branch is our default branch. One of the responsible ways to use git is to make sure that the `master` branch is always clean with working code so that if we ever need to add a bug fix, we can do it and deploy a new version of the application immediately. We don't put broken code in master so that we can always deploy master.
+One of the responsible ways to use git is to make sure that the `master` branch is always clean with working code. That way, as in the examples above, if we ever need to add a bug fix, we make the change and deploy a new version of the application immediately. So what does that workflow look like?
 
 ### Starting a new feature with `git branch new-feature`
 
-To keep master clean, when we want to start a new feature, we should do it in an isolated feature branch. Our timeline will look as follows:
+To keep `master` clean, when we want to start a new feature, we should do it in an isolated branch. Our timeline will look as follows:
 
 ![Feature Branch](https://dl.dropboxusercontent.com/s/d61r0fxyriaf5oj/2015-11-02%20at%2011.52%20AM.png)
 
-After commit 2, we will branch out of master and create a new timeline for commits and events specifically related to the new feature. The master timeline remains unchanged and clean. Now that we've covered the idea of the new-feature branch, let's actually make it.
+After commit 2, we're off `master` and working in a completely seperate new timeline. The master timeline remains unchanged and can we revert to it at any time.
 
-To make a new branch simply type: `git branch <branch name>`. In the case of a branch relating to a new feature, we'd name the branch `new-feature` like so:
+To make a new branch simply type: `git branch <branch name>`. 
+
+In our case, for mission-critical-application's new feature, we'll simply name the branch `new-feature` like so:
 
 ```
 mission-critical-application $ git branch new-feature
@@ -110,7 +114,7 @@ mission-critical-application $ git branch -a
   new-feature
 ```
 
-The `*` in front of the branch `master` indicates that `master` is currently our working branch and git tells us that we also have a branch called `new-feature`. If we made a commit right now, that commit would still be applied to our `master` branch.
+The `*` in front of the branch `master` indicates that `master` is currently our working branch. We created the `new-feature` branch, but we haven't actually switched to it yet. If we made a commit right now, it would be applied to `master` — a dangerous move if we're writing experimental feature code.
 
 ### Switching branches with `git checkout`
 
