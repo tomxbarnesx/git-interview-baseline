@@ -227,13 +227,13 @@ The final step of our `new-feature` work sprint is to now merge that timeline in
 
 ## Merging branches with `git merge`
 
-Our goal is to bring the timeline of commits that occurred on the `new-feature` branch into the `master` so that at the end our `master` looks like this:
+Our goal is to bring the timeline of commits that occurred on the `new-feature` branch into `master` so that at the end our `master` looks like this:
 
 ![Merged Timeline](https://dl.dropboxusercontent.com/s/bf0cktf3ag549z2/2015-11-02%20at%201.15%20PM.png)
 
-By merging the timelines, `master` will have all of the commits from the `new-feature` branch as though those events occured on the `master` timeline.
+Once this is complete, `master` will have all of the commits from the `new-feature` branch, as though those events occured directly on the `master` timeline.
 
-When we merge a branch with `git merge`, it's important to be currently working on your target branch, the branch you want to move into. The first step for our `new-feature` merge is to checkout `master` because that is where we want the commits to end up.
+When we merge a branch with `git merge`, it's important to be on your target branch, the branch you where you want to add the changes. In this case that is `master` because that's where we want our commits to end up. Let's checkout there.
 
 ```
 mission-critical-application $ git checkout master
@@ -251,7 +251,7 @@ Fast-forward
  create mode 100644 new-feature
 ```
 
-Now the branches have been merged and if you `ls`, you'll see the `new-feature` file from the `new-feature` branch in your current working directory that is checked out to master.
+Wow. Easy. The branches have been merged and if you list your files with `ls`, you'll see the `new-feature` file from in your current working directory. Our new features is no longer isolated on its lonely branch. It's now an integral part of our growing application.
 
 ## Working with remote branches with `git fetch` and `git pull`
 
