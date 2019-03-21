@@ -54,7 +54,7 @@ mission-critical-application $ git commit -m "First working version of applicati
 Let's break this down piece by piece:
 
 1. First, we made a new directory with `mkdir mission-critical-application`.
-2. We navigated into that directory with `cd mission-critical-application`.
+2. We moved into that directory with `cd mission-critical-application`.
 3. We turned that directory into a git repository with `git init`.
 4. We created our application `touch application.rb`.
 5. We programmed an entire working first version in `application.rb` (*not reflected in the CLI commands above, but we did, and it was awesome, great job*).
@@ -114,11 +114,11 @@ mission-critical-application $ git branch -a
   new-feature
 ```
 
-The `*` in front of the branch `master` indicates that `master` is currently our working branch. We created the `new-feature` branch, but we haven't actually switched to it yet. If we made a commit right now, it would be applied to `master` — a dangerous move if we're writing experimental feature code.
+The `*` in front of the branch `master` indicates that `master` is currently our working branch. We created the `new-feature` branch, but we haven't actually switched to it yet. If we made a commit right now, it would be applied to `master` — a dangerous place to be if we're writing experimental feature code.
 
 ### Switching branches with `git checkout`
 
-We need to checkout or move into our `new-feature` timeline or branch so that git knows that all commits made apply to only that unit of work, timeline, or branch. We can move between branches with `git checkout <branch name>`.
+We need to checkout, or move into, our `new-feature` branch so git knows to apply our commits only that isolated timeline. We can move between branches with `git checkout <branch name>`.
 
 ```
 mission-critical-application $ git status
@@ -131,9 +131,9 @@ On branch new-feature
 nothing to commit, working directory clean
 ```
 
-We started on `master` and then checked out our `new-feature` branch with `git checkout new-feature`, thereby moving into that timeline.
+We started on `master` and checked out to our `new-feature` branch with `git checkout new-feature`. Now we're ready to commit fresh code.
 
-Let's make a commit in this `new-feature` and get the feature started by making a new file, `new-feature-file` to represent the code for the new feature.
+Let's get this feature started by making a new file, `new-feature-file` to represent our new changes.
 
 ```
 mission-critical-application $ touch new-feature-file
@@ -144,15 +144,15 @@ mission-critical-application $ git commit -m "Started new feature"
  create mode 100644 new-feature-file
 ```
 
-You can see the commit we made was made in the context of the `new-feature` branch.
+You can see the commit we made was in the context of the `new-feature` branch.
 
-Right as we got started on that feature though, we get another bug report and have to move back into master to fix the bug and then deploy master. How do we move from `new-feature` branch back to `master`? What will our code look like when we move back to `master`, will we see the remnants of the `new-feature` branch and code represented by the `new-feature-file`?
+Right as we got started though, we got another bug report and have to move back into `master` to fix and deploy. How do we move from `new-feature` branch back to `master`? What will our code look like when we move back to `master`?
 
-**Protip: You can create and checkout a new branch in one command using: `git checkout -b new-branch-name`. That will both create the branch `new-branch-name` and move into it by checking it out.**
+**Protip: You can create and checkout a new branch in one command using: `git checkout -b new-branch-name`. That will both create branch `new-branch-name` and move into it.**
 
 #### Moving back to `master` with `git checkout master`
 
-You can always move between branches with `git checkout`. Since we are currently on `new-feature`, we can move back to master with `git checkout master`.
+You can always move between branches with `git checkout`. Since we're currently on `new-feature`, we can move back to master with `git checkout master`.
 
 ```
 mission-critical-application $ git checkout master
@@ -166,7 +166,7 @@ mission-critical-application $ git checkout new-feature
 Switched to branch 'new-feature'
 ```
 
-And back again with:
+And back again:
 
 ```
 mission-critical-application $ git checkout master
@@ -175,16 +175,16 @@ Switched to branch 'master'
 
 ![Switching between branches](https://dl.dropboxusercontent.com/s/qzajqsd9f6njauc/2015-11-02%20at%2012.12%20PM.png)
 
-From master, one thing you'll notice is that the code you wrote on `new-feature`, namely the file, `new-feature-file`, is not present in the current directory.
+From `master`, one thing you'll notice is that the code you wrote on `new-feature`, namely the file, `new-feature-file`, is gone.
 
 ```
 mission-critical-application $ ls
 application.rb first-bug-fix.rb
 ```
 
-The master branch only has the code from the most recent commit relative to the master timeline or branch. The code from our `new-feature` is tucked away in that branch, waiting patiently in isolation from the rest of our code in `master` for us to finish the feature.
+The master branch only has the code from the most recent commit we made there. The code from our `new-feature` is tucked away in its own branch, waiting patiently for us to return.
 
-Once you're on master you are free to make a commit to fix the bug, which we'll represent with a new file, `second-bug-fix.rb`.
+Once you're on `master` you're free to make a commit to fix the bug, which we'll represent with a new file, `second-bug-fix.rb`.
 
 ```
 mission-critical-application $ touch second-bug-fix.rb
@@ -196,9 +196,9 @@ Let's look at our timeline now.
 
 ![Commit on Master](https://dl.dropboxusercontent.com/s/9ipgkog7yv8hrok/2015-11-02%20at%2012.18%20PM.png)
 
-We were able to update the timeline in master with the fix to the bug without touching any of the code in new-feature. `new-feature` branch and timeline remains 1 commit behind master, because the second bug fix commit occured in master and `new-feature` branch was created only with the commits at the moment when the branch was created. You could describe `master` as being 1 commit ahead of the `new-feature` branch.
+We were able to update the timeline in master with the bug fix without touching any of the code in new-feature. You could describe `master` as being 1 commit ahead of the `new-feature` branch.
 
-Let's go back into `new-feature` and complete the feature and commit it and then look at the timeline. Remember how to move from `master` back to `new-feature`?
+Let's go back into `new-feature`, complete it, commit it, and then look at our timeline. Remember how to move from `master` back to `new-feature`?
 
 ```
 mission-critical-application $ git status
@@ -208,7 +208,7 @@ mission-critical-application $ git checkout new-feature
 Switched to branch 'new-feature'
 ```
 
-Let's rename `new-feature-file` to `new-feature` to signify the code we wrote to complete the feature and commit this change. We can rename a file with `mv <original filename> <new filename>` BASH command.
+Let's rename `new-feature-file` to `new-feature` to signify the code we wrote to complete the feature. We can rename a file with `mv <original filename> <new filename>` BASH command.
 
 ```
 mission-critical-application $ mv new-feature-file new-feature
@@ -219,15 +219,15 @@ mission-critical-application $ git commit -m "Finished feature"
  create mode 100644 new-feature
 ```
 
-Let's look at our timeline now.
+Here's our timeline now.
 
 ![Completed Feature Branch](https://dl.dropboxusercontent.com/s/xtoehu7tv5zim6v/2015-11-02%20at%2012.31%20PM.png)
 
-The final step of our `new-feature` work sprint is to figure out how to merge that timeline into the master timeline.
+The final step of our `new-feature` work sprint is to now merge that timeline into the master so everything works together.
 
 ## Merging branches with `git merge`
 
-Our goal is to bring the timeline of commits that occurred on the `new-feature` branch into the `master` so that at the end of the operation, our `master` timeline looks like:
+Our goal is to bring the timeline of commits that occurred on the `new-feature` branch into the `master` so that at the end our `master` looks like this:
 
 ![Merged Timeline](https://dl.dropboxusercontent.com/s/bf0cktf3ag549z2/2015-11-02%20at%201.15%20PM.png)
 
