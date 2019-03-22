@@ -13,9 +13,11 @@
 
 ## Overview
 
-A key to collaborating with git is to keep discrete and individual lines of work isolated from each other. Consider the following scenario.
+When our apps start becoming more complicated, or have larger teams working on them, we'll need a tool to help us manage the mounting layers of edits. Enter git, the most popular system for version control out there, available completely open source. Using git, we can add features incrementally, without the risk of breaking our entire app, and capture snapshots of our project at different points in time. 
 
-You start work on a big feature, making a few commits that don't entirely finish the feature. Your git log might look like:
+The key to collaborating with git is to keep discrete and individual lines of work isolated from each other. Consider the following scenario.
+
+You start work on a big feature. You work on it for days, making a few commits that don't entirely finish the feature. Your git log might look like:
 
 ```
 512bec5 Still broken, working on new-feature (aviflombaum, 2 hours ago)
@@ -23,9 +25,7 @@ You start work on a big feature, making a few commits that don't entirely finish
 fbee832 Started new-feature (aviflombaum, 2 days ago)
 ```
 
-Two days ago we started working, and as of two hours ago, we're almost done. In our current state, if we had to push the repository and deploy the latest version of our code to production, our users would see a half-finished, currently broken new-feature. That's no good.
-
-But no big deal, right? We can just wait until we're done with the feature to deploy our code then. But what if we notice a big bug currently breaking the application for all users? It's an easy fix, and one simple change would make everything work again. Unfortunately, even if you made that commit, you can't currently deploy, because while your edit might fix the bug, you'd still be pushing our half-finished and broken new-feature.
+As of two hours ago, it's almost there, but if we had to push it now and deploy the latest version of our code, our users would see a half-finished, currently broken new feature. That's fine if we have the time, but what if we notice a big bug breaking the application for all users? It's an easy fix, and one simple change could make everything work again. Unfortunately, even if you made that commit, you can't deploy. Your edit might fix the bug, but you'd still be pushing a half-finished feature.
 
 ```
 r4212d1 Fix to application breaking bug (aviflombaum, just now)
@@ -34,11 +34,13 @@ r4212d1 Fix to application breaking bug (aviflombaum, just now)
 fbee832 Started new-feature (aviflombaum, 2 days ago)
 ```
 
-Wouldn't it have been great if we simply isolated our work on new-feature into its own copy of our code so that until it's done, we can still easily edit and redeploy our main application? We can do exactly this using a feature in git called branches.
+Wouldn't it be great if we simply isolated our work on new-feature into its own copy of our code so that until it's done, we can still easily edit and redeploy our main app? We can do exactly this in git using branches.
 
 ## Making a branch with `git branch`
 
-Let's quickly make a repository that we can use as a sandbox to experiment with the collaborative features of git. We recommend following along by trying out some of the commands in your terminal as you read. The best way to get comfortable with git is to experiment, add, commit, and push until the process is second nature. Feel free to copy and paste the lines below and pay close attention to any error messages you recieve.
+Let's quickly make a repository that we can use as a sandbox to experiment with the collaborative features of git. We recommend following along by trying out some of the commands in your terminal as you read. The best way to get comfortable with git is to experiment, add, commit, push and repeat until the process is second nature. 
+
+Feel free to copy and paste the lines below and pay close attention to any error messages you recieve.
 
 From our home directory we're going to make a new directory for our mission-critical-application.
 
@@ -88,11 +90,11 @@ On branch master
 nothing to commit, working directory clean
 ```
 
-One of the responsible ways to use git is to make sure that the `master` branch is always clean with working code. That way, as in the examples above, if we ever need to add a bug fix, we make the change and deploy a new version of the application immediately. So what does that workflow look like?
+One of the most responsible ways to use git is to make sure that the `master` branch is always clean with working code. That way, as in the examples above, if we ever need to add a bug fix, we make the change and deploy a new version of the application immediately. What does that workflow look like?
 
 ### Starting a new feature with `git branch new-feature`
 
-To keep `master` clean, when we want to start a new feature, we should do it in an isolated branch. Our timeline will look as follows:
+To keep `master` clean, when we want to start a new feature, we should do it in an isolated branch. Our timeline will look like this:
 
 ![Feature Branch](https://dl.dropboxusercontent.com/s/d61r0fxyriaf5oj/2015-11-02%20at%2011.52%20AM.png)
 
@@ -114,11 +116,11 @@ mission-critical-application $ git branch -a
   new-feature
 ```
 
-The `*` in front of the branch `master` indicates that `master` is currently our working branch. We created the `new-feature` branch, but we haven't actually switched to it yet. If we made a commit right now, it would be applied to `master` — a dangerous place to be if we're writing experimental feature code.
+The `*` in front of the branch `master` indicates that `master` is currently our working branch. We created the `new-feature` branch, but we haven't actually switched to it yet. If we made a commit right now, it would be applied to `master` — a dangerous place to be if we're writing experimental new features.
 
 ### Switching branches with `git checkout`
 
-We need to checkout, or move into, our `new-feature` branch so git knows to apply our commits only that isolated timeline. We can move between branches with `git checkout <branch name>`.
+We need to checkout, or move into, our `new-feature` branch so git knows to apply our commits only that isolated timeline. Move between branches with `git checkout <branch name>`.
 
 ```
 mission-critical-application $ git status
@@ -131,7 +133,7 @@ On branch new-feature
 nothing to commit, working directory clean
 ```
 
-We started on `master` and checked out to our `new-feature` branch with `git checkout new-feature`. Now we're ready to commit fresh code.
+Breaking this down: we started on `master` and checked out to our `new-feature` branch with `git checkout new-feature`. Now we're ready to commit fresh code.
 
 Let's get this feature started by making a new file, `new-feature-file` to represent our new changes.
 
@@ -144,9 +146,9 @@ mission-critical-application $ git commit -m "Started new feature"
  create mode 100644 new-feature-file
 ```
 
-You can see the commit we made was in the context of the `new-feature` branch.
+You can see the commit we made was in the context of the `new-feature` branch, that 332a618 is the commit's specific id, if we ever need to refer back to it.
 
-Right as we got started though, we got another bug report and have to move back into `master` to fix and deploy. How do we move from `new-feature` branch back to `master`? What will our code look like when we move back to `master`?
+Right as we're gettig started, we find another bug and have to move back into `master` to fix and deploy. How do we move from `new-feature` branch back to `master`? And what will our code look like when we're there?
 
 **Protip: You can create and checkout a new branch in one command using: `git checkout -b new-branch-name`. That will both create branch `new-branch-name` and move into it.**
 
@@ -173,16 +175,18 @@ mission-critical-application $ git checkout master
 Switched to branch 'master'
 ```
 
+Notice anything about your files?
+
 ![Switching between branches](https://dl.dropboxusercontent.com/s/qzajqsd9f6njauc/2015-11-02%20at%2012.12%20PM.png)
 
-From `master`, one thing you'll notice is that the code you wrote on `new-feature`, namely the file, `new-feature-file`, is gone.
+From `master`, you'll see all your changes, namely your new file `new-feature-file`, is gone from the directory.
 
 ```
 mission-critical-application $ ls
 application.rb first-bug-fix.rb
 ```
 
-The master branch only has the code from the most recent commit we made there. The code from our `new-feature` is tucked away in its own branch, waiting patiently for us to return.
+The `master` branch only has the code from the most recent commit we made there. The code from our `new-feature` is tucked away in its own branch, waiting patiently for us to return.
 
 Once you're on `master` you're free to make a commit to fix the bug, which we'll represent with a new file, `second-bug-fix.rb`.
 
@@ -196,7 +200,7 @@ Let's look at our timeline now.
 
 ![Commit on Master](https://dl.dropboxusercontent.com/s/9ipgkog7yv8hrok/2015-11-02%20at%2012.18%20PM.png)
 
-We were able to update the timeline in master with the bug fix without touching any of the code in new-feature. You could describe `master` as being 1 commit ahead of the `new-feature` branch.
+We were able to update the timeline in master with the bug fix without touching any of the code in `new-feature`. You could describe `master` as being 1 commit ahead of the `new-feature` branch.
 
 Let's go back into `new-feature`, complete it, commit it, and then look at our timeline. Remember how to move from `master` back to `new-feature`?
 
@@ -208,7 +212,7 @@ mission-critical-application $ git checkout new-feature
 Switched to branch 'new-feature'
 ```
 
-Let's rename `new-feature-file` to `new-feature` to signify the code we wrote to complete the feature. We can rename a file with `mv <original filename> <new filename>` BASH command.
+Let's rename `new-feature-file` to `new-feature` to signify the code we wrote to complete the feature. We can rename a file with the `mv <original filename> <new filename>` BASH command.
 
 ```
 mission-critical-application $ mv new-feature-file new-feature
@@ -219,21 +223,21 @@ mission-critical-application $ git commit -m "Finished feature"
  create mode 100644 new-feature
 ```
 
-Here's our timeline now.
+Our timeline has grown.
 
 ![Completed Feature Branch](https://dl.dropboxusercontent.com/s/xtoehu7tv5zim6v/2015-11-02%20at%2012.31%20PM.png)
 
-The final step of our `new-feature` work sprint is to now merge that timeline into the master so everything works together.
+The final step of our `new-feature` work sprint is to now merge this timeline into the master so everything works together.
 
 ## Merging branches with `git merge`
 
-Our goal is to bring the timeline of commits that occurred on the `new-feature` branch into `master` so that at the end our `master` looks like this:
+Our goal is to bring the timeline of commits that occurred on the `new-feature` branch into the `master` so that at the end our `master` looks like this:
 
 ![Merged Timeline](https://dl.dropboxusercontent.com/s/bf0cktf3ag549z2/2015-11-02%20at%201.15%20PM.png)
 
-Once this is complete, `master` will have all of the commits from the `new-feature` branch, as though those events occured directly on the `master` timeline.
+Once this is complete, `master` will have all of the commits from the `new-feature` branch, as if those events were written straight into the `master` from the beginning.
 
-When we merge a branch with `git merge`, it's important to be on your target branch, the branch you where you want to add the changes. In this case that is `master` because that's where we want our commits to end up. Let's checkout there.
+When we merge a branch with `git merge`, it's important to be on your target branch, the branch you where you want to add the changes. In this case that is the `master` because where we want our commits to end up for deployment. Let's checkout there.
 
 ```
 mission-critical-application $ git checkout master
@@ -255,7 +259,7 @@ Wow. Easy. The branches have been merged and if you list your files with `ls`, y
 
 ## Working with remote branches with `git fetch` and `git pull`
 
-Git wouldn't be the programming game-changer it is, though, if all your branches stayed confined to your local machine. The real power of git is unlocked when you link your local branches to remote branches that live on the internet, generally on GitHub. Pushing your local branches there can allow entire teams to work on a single project, with everyone creating branches, commiting, and downloading new merged branches locally.
+Git wouldn't be the programming game-changer it is, though, if all your branches stayed confined to your local machine. The real power of git is unlocked when you link your local branches to remote branches that live on the internet, generally GitHub. Pushing your local branches there can allow entire teams to work on a single project, with everyone creating branches, commiting, and downloading and merging these branches.
 
 Whenever you want to update your local copy with all the branches that might have been added to the GitHub remote, you can type `git fetch`.
 
@@ -278,7 +282,7 @@ From github.com:aviflombaum/mission-critical-application
  * [new branch]      remote-feature-branch -> origin/remote-feature-branch
 ```
 
-The first line, `From github.com:aviflombaum/mission-critical-application` is informing us which remote our `git fetch` updated from, namely, the remote repository located at: https://github.com/aviflombaum/mission-critical-application
+The first line, `From github.com:aviflombaum/mission-critical-application` is informing us which remote our `git fetch` updated from, namely, the remote repository located at: https://github.com/aviflombaum/mission-critical-application.
 
 When we `fetch` with git, we are asking to copy all changes on the remote to our local git repository, but not actually integrate any. The next line, `bfe50fc..0ae1da2  master     -> origin/master` tells us that a new commit was found in `origin/master`, which is simply the GitHub version of `master`. Even though git fetched a new commit from `origin/master`, it did not merge it into the local `master`.
 
@@ -302,7 +306,7 @@ mission-critical-application $ ls
 
 Now `ls` reveals that `remote-bug-fix` is integrated into our local copy of `master` as well. Another great success.
 
-When we fetched, git also outputted: `* [new branch]      remote-feature-branch -> origin/remote-feature-branch`. Similarly, git fetched a new branch and if we want to check it out or merge it we can using `git checkout` or `git merge`. Let's checkout what code is on `remote-feature-branch`, a branch another developer made for another feature and pushed up to GitHub so they can share it with us.
+When we fetched, git also outputted: `* [new branch]      remote-feature-branch -> origin/remote-feature-branch`. We fetched an entire new branch, and if we want we can use `git checkout` or `git merge` to start working with it. Let's check what's on `remote-feature-branch`, which some other developer pushed up to GitHub so they could share it with us.
 
 ```
 mission-critical-application $ git checkout remote-feature-branch
@@ -310,20 +314,20 @@ Branch remote-feature-branch set up to track remote branch remote-feature-branch
 Switched to a new branch 'remote-feature-branch'
 ```
 
-When we checkout a remote branch that was fetched, git will create a local branch to track that remote and switch to it. We can now write new code, push it back up to GitHub, and another developer can fetch those changes down.
+When we checkout a remote branch that was fetched, git will create a local version to track that remote, and then switch to it. We can now write new code, push it back up to GitHub, and another developer can fetch those changes down.
 
 ### Combining `git fetch` with `git merge` by using `git pull`
 
-There is an easier and more common way to `fetch` and `merge` from GitHub that doesn't require this two step process. Similar to `git checkout -b <branch_name>`, which allows us to create a branch and switch to it in a single motion, `git pull` allows to fetch and merge in one command. This is likely how you'll draw new versions down from GitHub 99% of the time.
+Fetch and pull will get the job done, but you know developers crave effeciency. An easier and more common way to `fetch` and `merge` from GitHub is using `git pull`. Similar to `git checkout -b <branch_name>`, which allows us to create a branch and switch to it in a single motion, `git pull` allows to fetch and merge in one command. It's likely what you'll use to draw new versions down from GitHub 99% of the time.
 
 When you `git pull` the following things will occur:
 
-1. You will `git fetch` all remote changes, including those on the current branch, existing branches, and new branches.
-2. Any changes that are on a remote branch tracked by your local branch — such as your `master` and `remote/master` — will be automatically merged.
+1. You will `git fetch` all the remote changes, including those on the current branch, existing branches, and new branches.
+2. Any changes on a remote branch tracked by your local branch — such as your `master` and `remote/master` — will be automatically merged.
 
 ## Conclusion
 
-This is just a taste of all that git has to offer. It's complex and can produce difficult tangles of version histories and merge conflicts at times. But it's the best option you've got. There's no easy way to allow 100s of people to all work on the same code base. Don't attempt to memorize every command right off the bat. Mastering each bit at a time, and eventually its logic will be come almost as naturally as saving a text document or sending an email. Almost...
+Git is complex. Used correctly, it can be a saving grace — used carelessly, a source of endless version conflict nightmares. So take your time getting comfortable with it. There's no easy way to have hundreds of people work on the same code base without issue. Master a bit at a time, and eventually its logic will come almost as naturally as saving text documents or sending emails. Almost.
 
 ![XKCD Git](http://imgs.xkcd.com/comics/git.png)
 
